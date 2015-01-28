@@ -5,9 +5,10 @@ define([
     "dojo/when",
     "dojo/dom-style",
     "dojo/aspect",
-    "dijit/Dialog"/*,
+    "dijit/Dialog",
+    "./Utils"/*,
     //"engine/widgets/global/confirmationOkCancel"*/
-], function(win, declare, Deferred, when, domStyle, aspect, Dialog/*, ConfirmationOkCancelWidget*/){
+], function(win, declare, Deferred, when, domStyle, aspect, Dialog, Utils/*, ConfirmationOkCancelWidget*/){
 
 	return declare("_WidgetInDialog", null, {
 //		// summary:
@@ -41,7 +42,7 @@ define([
 			var scope = this;
 			aspect.before(this, 'postCreate', function(){
 				
-				this.own(handleEventEnterEsc(this, null, scope.closeWidget)); // handle Esc and Enter keypress
+				this.own(Utils.handleEventEnterEsc(this, null, scope.closeWidget)); // handle Esc and Enter keypress
 				
 				var destroyDialogWithContent = function(){ // function for close Dialog with destroing
 					scope.onCloseWidget();
