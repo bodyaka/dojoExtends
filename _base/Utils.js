@@ -1,12 +1,17 @@
 define([
 	"dojo/_base/lang",
+	"dojo/_base/window",
 	"dojo/topic",
 	"dojo/on",
 	"dojo/dom",
 	"dojo/dom-prop",
 	"dojo/dom-style",
     "dojo/date/locale"
-], function (lang, topic, on, dom, domProp, domStyle, locale) {
+], function (lang, win, topic, on, dom, domProp, domStyle, locale) {
+	
+	on(win.doc, 'keydown', function(e){
+		topic.publish('globalEventKeydown', e);
+	});
 	
 	return {
 		
