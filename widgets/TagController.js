@@ -20,7 +20,7 @@ define([
 			innerHTML: tagObject[this.labelAttr],
 			'class': 'tag',
 			style: {
-				float: 'left',
+				'float': 'left',
 				fontWeight: 'bold',
 				marginRight: '2px'
 			}
@@ -29,8 +29,8 @@ define([
 		var buttonTagRemove = domConstruct.create('div', {
 			'class': 'dijitDialogCloseIcon',
 			style: {
+				'float': 'right',
 				position: 'relative',
-				float: 'right',
 				marginLeft: '2px'
 			}
 		}, nodeTag, 'last');
@@ -44,7 +44,7 @@ define([
 		this.own(clickHandler);
 	};
 
-	return declare([WidgetBase, TemplatedMixin, WidgetsInTemplateMixin], {
+	return declare('TagController', [WidgetBase, TemplatedMixin, WidgetsInTemplateMixin], {
 		templateString: template,
 		
 		/**
