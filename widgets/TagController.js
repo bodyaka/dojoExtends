@@ -10,41 +10,13 @@ define([
 	
 	"dijit/form/ComboBox"
 ], function(declare, lang, on, domConstruct, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template){
-	
-	/**
-	 * Draw tag on page
-	 */
-	var tagDraw = function(tagObject){
-		
-		var nodeTag = domConstruct.create('div', {
-			innerHTML: tagObject[this.labelAttr],
-			'class': 'tag',
-			style: {
-				'float': 'left',
-				fontWeight: 'bold',
-				marginRight: '2px'
-			}
-		}, this.nodeTags);
-		
-		var buttonTagRemove = domConstruct.create('div', {
-			'class': 'dijitDialogCloseIcon',
-			style: {
-				'float': 'right',
-				position: 'relative',
-				marginLeft: '2px'
-			}
-		}, nodeTag, 'last');
-		
-		var scope = this;
-		var clickHandler = on(buttonTagRemove, 'click', function(evt){
-			clickHandler.remove();
-			domConstruct.destroy(nodeTag);
-			scope.removeTag(tagObject);
-		});
-		this.own(clickHandler);
-	};
 
 	return declare('TagController', [WidgetBase, TemplatedMixin, WidgetsInTemplateMixin], {
+		
+		constructor: function(){
+			this.tags = [];
+		},
+		
 		templateString: template,
 		
 		/**
@@ -63,10 +35,35 @@ define([
 		/**
 		 * Array of attached tags
 		 */
-		tags: [],
+		tags: null,
 		_setTagsAttr: function(tags){
+			this._set('tags', tags);
+			if(Array.isArray(tags) && tags.length){
+				if(!this.tagsStore){
+					// if attached list already loaded, but store not yet, then set flag to "true", and run this function again 
+					this.storeLate = true;
+					return;
+				}
+			}else{
+				return;
+			}
+			
 			for(var i in tags){
-				this.addTag(tags[i], true);
+				this._tagDraw(this.tagsStore.get(tags[i]));
+			}
+		},
+		
+		/**
+		 * Available tags list
+		 */
+		tagsStore: null,
+		_setTagsStoreAttr: function(tagsStore){
+			this._set('tagsStore', tagsStore);
+			this.selectTagsStore.set({store: tagsStore});
+			
+			if(this.storeLate){
+				this.storeLate = false;
+				this._setTagsAttr(this.tags);
 			}
 		},
 		
@@ -82,36 +79,57 @@ define([
 		},
 		
 		/**
-		 * Available tags list
-		 */
-		tagsStore: null,
-		_setTagsStoreAttr: function(tagsStore){
-			this.selectTagsStore.set({store: tagsStore});
-		},
-		
-		/**
 		 * Add tag to widget
 		 */
-		addTag: function(tagObject, quiet){
-			quiet = quiet || false;
-			
+		tagAdd: function(tagObject){
 			if(this.tags.indexOf(tagObject.id) >= 0) return;
 			
 			this.tags.push(tagObject.id);
-			lang.hitch(this, tagDraw)(tagObject);
+			this._tagDraw(tagObject);
 			
-			if(!quiet) this.cbTagAdded(tagObject);
+			this.cbTagAdded(tagObject);
 		},
 		
 		/**
 		 * Remove tag from widget
 		 */
-		removeTag: function(tagObject, quiet){
-			quiet = quiet || false;
-			
+		tagRemove: function(tagObject, quiet){
 			this.tags.splice(this.tags.indexOf(tagObject.id), 1);
 			
 			if(!quiet) this.cbTagRemoved(tagObject);
+		},
+		
+		/**
+		 * Draw tag on page
+		 */
+		_tagDraw: function(tagObject){
+			
+			var nodeTag = domConstruct.create('div', {
+				innerHTML: tagObject[this.labelAttr],
+				'class': 'tag',
+				style: {
+					'float': 'left',
+					fontWeight: 'bold',
+					marginRight: '2px'
+				}
+			}, this.nodeTags);
+			
+			var buttonTagRemove = domConstruct.create('div', {
+				'class': 'dijitDialogCloseIcon',
+				style: {
+					'float': 'right',
+					position: 'relative',
+					marginLeft: '2px'
+				}
+			}, nodeTag, 'last');
+			
+			var scope = this;
+			var clickHandler = on(buttonTagRemove, 'click', function(evt){
+				clickHandler.remove();
+				domConstruct.destroy(nodeTag);
+				scope.tagRemove(tagObject);
+			});
+			this.own(clickHandler);
 		},
 		
 		postCreate: function(){
@@ -128,7 +146,7 @@ define([
 					return;
 				}
 				
-				scope.addTag(tagObject);
+				scope.tagAdd(tagObject);
 				scope.selectTagsStore.reset();
 			}));
 		}
