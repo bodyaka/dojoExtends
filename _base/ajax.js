@@ -1,10 +1,11 @@
 define([
+    "dojo/_base/declare",
 	"dojo/_base/xhr",
 	"dojo/json",
 	"dojo/cookie"
-], function(xhr, JSON, cookie){
-	return {
-		
+], function(declare, xhr, JSON, cookie, JsonRest){
+	return declare(null, {
+			
 		/**
 		 * Add access token to params
 		 */
@@ -23,8 +24,7 @@ define([
 		/**
 		 * send Ajax request
 		 */
-		_request: function(restMethod, url, params)
-		{
+		_request: function(restMethod, url, params){
 			params = params || '';
 			
 			// add slash at the begining of url string for request to root of domain
@@ -73,5 +73,5 @@ define([
 			
 			return handlerXhr.promise;
 		}
-	};
+	});
 });
