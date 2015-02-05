@@ -1,10 +1,9 @@
 define([
-    "dojo/_base/declare",
 	"dojo/_base/xhr",
 	"dojo/json",
 	"dojo/cookie"
-], function(declare, xhr, JSON, cookie, JsonRest){
-	return declare(null, {
+], function(xhr, JSON, cookie, JsonRest){
+	return {
 			
 		/**
 		 * Add access token to params
@@ -73,5 +72,5 @@ define([
 			
 			return handlerXhr.promise;
 		}
-	});
+	};
 });
