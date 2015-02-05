@@ -79,6 +79,16 @@ define([
 		},
 		
 		/**
+		 * Additional static query for storage
+		 */
+		query: null,
+		_setQueryAttr: function(query){
+			this.selectTagsStore.set({
+				query: query
+			});
+		},
+		
+		/**
 		 * Add tag to widget
 		 */
 		tagAdd: function(tagObject){
@@ -134,15 +144,17 @@ define([
 		
 		postCreate: function(){
 			var scope = this;
+			this.own(on(this.selectTagsStore, 'keydown', function(evt){
+				if(evt.keyCode == 13){ //enter
+					scope.cbTagNew(this.get('value'));
+				}
+			}));
 			this.own(on(this.selectTagsStore, 'change', function(tagName){
 				if(!tagName) return;
 				
 				var tagObject = scope.selectTagsStore.get('item');
 				if(!tagObject){
-					
-					
-					scope.cbTagNew(tagName);
-					alert('"tag add" functionality not implemented yet!')
+					// tag must be saved in handler "keydown"
 					return;
 				}
 				
