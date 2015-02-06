@@ -4,17 +4,19 @@ define([
 	"dijit/popup"
 ], function(declare, on, popup){
 
-	return declare("_WidgetInPopup", null, {
+	return declare("_WidgetInPopup", null, {		
 		/**
-		 * Node around which popup is opened
+		 * Options for open popup
 		 */
-		around: null,
-		_setAroundAttr: function(around){
+		options: {},
+		_setOptionsAttr: function(options){
+			this._set('options', options);
+			
 			var scope = this;
-			if(around){
-				on(around, 'click', function(){
+			
+			if(options.around){ //Node around which popup is opened
+				on(options.around, 'click', function(){
 					scope.popupOpen();
-					scope._opened = true;
 				});
 			}
 		},
@@ -36,11 +38,11 @@ define([
 		 * Open popup
 		 */
 		popupOpen: function(){
-			popup.open({
-				around: this.around,
-				popup: this,
-				orient: ['above-alt']
-			});
+			this._opened = true;
+			
+			this.options.popup = this; // set Widget which we must open (inherited of the _WidgetInPopup)
+			
+			popup.open(this.options);
 		},
 		
 		/**

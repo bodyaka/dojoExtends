@@ -49,7 +49,8 @@ define([
 			}
 			
 			for(var i in tags){
-				this._tagDraw(this.tagsStore.get(tags[i]));
+				var tagObject = this.tagsStore.get(tags[i]);
+				if(tagObject) this._tagDraw(tagObject);
 			}
 		},
 		
