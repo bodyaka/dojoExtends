@@ -4,10 +4,8 @@ define([
 	"dojo/ready",
 	"dojo/dom",
 	"dojo/dom-construct",
-	
-	"dojox/mobile/Button",
-	"dojox/mobile/SimpleDialog"
-], function(win, lang, ready, dom, domConstruct, Button, SimpleDialog){
+	"dojox/widget/Toaster"
+], function(win, lang, ready, dom, domConstruct, Toaster){
 	
 	/**
 	 * Notification module
@@ -85,13 +83,19 @@ define([
 	};
 	
 	ready(function(){
-		Notification.messageDialog = new SimpleDialog({style: 'z-index: 999;', modal: false}).placeAt(win.body());
-		Notification.messageDialogContent = domConstruct.create('div', null, Notification.messageDialog.domNode);
-		Notification.messageDialogConfirmButton = new Button({
-			'class': 'mblSimpleDialogButton mblRedButton', 
-			innerHTML: 'Ok',
-			onClick: lang.hitch(Notification.messageDialog, 'hide')
-		}).placeAt(Notification.messageDialog.domNode);
+	
+		// init "toaster" nodes 
+		Notification.toasterOk = new Toaster({positionDirection: 'tl-down', type: 'fatal'}, win.body(), 'last');
+		Notification.toasterError = new Toaster({positionDirection: 'tr-down', type: 'message'}, win.body(), 'last');
+		
+		
+//		Notification.messageDialog = new SimpleDialog({style: 'z-index: 999;', modal: false}).placeAt(win.body());
+//		Notification.messageDialogContent = domConstruct.create('div', null, Notification.messageDialog.domNode);
+//		Notification.messageDialogConfirmButton = new Button({
+//			'class': 'mblSimpleDialogButton mblRedButton', 
+//			innerHTML: 'Ok',
+//			onClick: lang.hitch(Notification.messageDialog, 'hide')
+//		}).placeAt(Notification.messageDialog.domNode);
 	});
 	
 	return dojo.global.Notification;
