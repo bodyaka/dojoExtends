@@ -80,16 +80,6 @@ define([
 		},
 		
 		/**
-		 * Additional static query for storage
-		 */
-		query: null,
-		_setQueryAttr: function(query){
-			this.selectTagsStore.set({
-				query: query
-			});
-		},
-		
-		/**
 		 * Add tag to widget
 		 */
 		tagAdd: function(tagObject){
