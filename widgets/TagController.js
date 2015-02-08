@@ -13,7 +13,12 @@ define([
 
 	return declare('TagController', [WidgetBase, TemplatedMixin, WidgetsInTemplateMixin], {
 		
+		/**
+		 * Container with RemoveButton, for program clean container with on.emit functionality
+		 */
+		_containerButtonRemove: null,
 		constructor: function(){
+			this._containerButtonRemove = [];
 			this.tags = [];
 		},
 		
@@ -37,6 +42,15 @@ define([
 		 */
 		tags: null,
 		_setTagsAttr: function(tags){
+			// clear current tags from view
+			for(var i in this._containerButtonRemove){
+				on.emit(this._containerButtonRemove[i], 'click', {
+				    bubbles: true,
+				    cancelable: true
+				});
+			}
+			this._containerButtonRemove = [];
+			
 			this._set('tags', tags);
 			if(Array.isArray(tags) && tags.length){
 				if(!this.tagsStore){
@@ -77,6 +91,11 @@ define([
 				labelAttr: labelAttr,
 				searchAttr: labelAttr,
 			});
+		},
+		
+		placeHolder: null,
+		_setPlaceHolderAttr: function(placeHolder){
+			this.selectTagsStore.set('placeHolder', placeHolder);
 		},
 		
 		/**
@@ -129,8 +148,11 @@ define([
 				clickHandler.remove();
 				domConstruct.destroy(nodeTag);
 				scope.tagRemove(tagObject);
+				
+				if(scope._containerButtonRemove[tagObject.id]) delete scope._containerButtonRemove[tagObject.id];
 			});
 			this.own(clickHandler);
+			this._containerButtonRemove[tagObject.id] = buttonTagRemove;
 		},
 		
 		postCreate: function(){
