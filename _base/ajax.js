@@ -17,7 +17,22 @@ define([
 		},
 		
 		apiRequest: function(restMethod, url, params){
-			return this._request(restMethod, dojo.config.apiUrlPath + url, params);
+			var _api = '';
+			var _url = '';
+			
+			if(dojo.config.apiUrlPath.substr(-1) == '/'){
+				_api = dojo.config.apiUrlPath.substr(0, dojo.config.apiUrlPath.length - 1);
+			}else{
+				_api = dojo.config.apiUrlPath;
+			}
+			
+			if(url.substring(0,1) != '/'){
+				_url = '/' + url;
+			}else{
+				_url = url;
+			}
+			
+			return this._request(restMethod, _api + _url, params);
 		},
 		
 		/**
