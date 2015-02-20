@@ -34,7 +34,7 @@ define([
 			
 			// add accessToken to xhr header
 			var options = {};
-			if(AccessToken){
+			if(typeof(AccessToken) != "undefined" && AccessToken){
 				options.headers = {'Authorization': 'Bearer ' + AccessToken}	
 			}
 			

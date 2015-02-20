@@ -12,7 +12,7 @@ define([
 			var options = {
 					target: target
 			};
-			if(AccessToken){
+			if(typeof(AccessToken) != "undefined" && AccessToken){
 				options.headers = {'Authorization': 'Bearer ' + AccessToken}	
 			}
 			
