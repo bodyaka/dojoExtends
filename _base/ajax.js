@@ -32,13 +32,19 @@ define([
 				_url = url;
 			}
 			
-			return this._request(restMethod, _api + _url, params);
+			// add accessToken to xhr header
+			var options = {};
+			if(AccessToken){
+				options.headers = {'Authorization': 'Bearer ' + AccessToken}	
+			}
+			
+			return this._request(restMethod, _api + _url, params, options);
 		},
 		
 		/**
 		 * send Ajax request
 		 */
-		_request: function(restMethod, url, params){
+		_request: function(restMethod, url, params, options){
 			params = params || '';
 			
 			// add slash at the begining of url string for request to root of domain
@@ -49,20 +55,11 @@ define([
 			var xhrArgs = {
 				url: url,
 				handleAs: 'json',
-				content: params,
-				load: function(data, evt) {
-					if(!data || data.errorCode){
-						throw new Error('Some error from API');
-					}else{
-						if(data.errorCode){
-							throw new Error((data.errorDescription)?data.errorDescription:data.errorCode);
-						}
-					}
-				},
-				error: function(err) {
-					throw new Error((err.message)?err.message:'Ajax request error');
-				}
+				content: params
 			};
+			
+			// add header to each request
+			if(options.headers) xhrArgs.headers = options.headers
 			
 			switch(restMethod){
 				case 'post':

@@ -9,7 +9,14 @@ define([
 			var target = dojo.config.apiUrlPath;
 			if(args && args.target) target += '/' + args.target;
 			
-			this.rest = new JsonRest({target: target});
+			var options = {
+					target: target
+			};
+			if(AccessToken){
+				options.headers = {'Authorization': 'Bearer ' + AccessToken}	
+			}
+			
+			this.rest = new JsonRest(options);
 	    },
 	
 		rest: null
