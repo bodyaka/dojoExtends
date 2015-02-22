@@ -93,6 +93,18 @@ define([
 			});
 		},
 		
+		/**
+		 * disable widget
+		 */
+		disabled: null,
+		_setDisabledAttr: function(disabled){
+			this._set('disabled', disabled);
+			this.selectTagsStore.set('disabled', disabled);
+		},
+		
+		/**
+		 * Place holder of widget
+		 */
 		placeHolder: null,
 		_setPlaceHolderAttr: function(placeHolder){
 			this.selectTagsStore.set('placeHolder', placeHolder);
@@ -145,6 +157,8 @@ define([
 			
 			var scope = this;
 			var clickHandler = on(buttonTagRemove, 'click', function(evt){
+				if(scope.disabled) return; // if widget disabled, user can't remove tag
+				
 				clickHandler.remove();
 				domConstruct.destroy(nodeTag);
 				scope.tagRemove(tagObject);
