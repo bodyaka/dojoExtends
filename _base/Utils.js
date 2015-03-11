@@ -109,11 +109,27 @@ define([
 		},
 		
 		/**
-		 * DateTime object to time (HH:mm)
+		 * DateTime object to date (YYYY.MM.DD)
 		 */
-		timeToStrClient: function(time)
+		convertDatetimeToStrDate: function(datetime)
 		{
-			return locale.format(time, {timePattern: "HH:mm:ss", selector: "time"});
+			return locale.format(datetime, {timePattern: "YYYY.MM.DD", selector: "date"});
+		}
+		
+		/**
+		 * DateTime object to time (HH:mm:ss)
+		 */
+		convertDatetimeToStrTime: function(datetime)
+		{
+			return locale.format(datetime, {timePattern: "HH:mm:ss", selector: "time"});
+		}
+		
+		/**
+		 * DateTime object to datetime (YYYY.MM.DD HH:mm)
+		 */
+		convertDatetimeToStrDatetime: function(datetime)
+		{
+			return locale.format(datetime, {timePattern: "YYYY.MM.DD HH:mm"});
 		}
 	};
 

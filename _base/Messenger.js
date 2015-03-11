@@ -37,7 +37,7 @@ define([
 				}
 			}, this.containerMessages);
 			domConstruct.create('td', {
-				innerHTML: Utils.timeToStrClient(message.timestamp),
+				innerHTML: Utils.convertDatetimeToStrTime(message.timestamp),
 				style: {
 					width: '50px'
 				}
