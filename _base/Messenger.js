@@ -114,11 +114,24 @@ define([
 		popup: new _popupWidget(),
 		
 		/**
+		 * Show time of simple message
+		 */
+		duration: 4000,
+		/**
+		 * Show time of "Ok" message
+		 */
+		durationOk: 4000,
+		/**
+		 * Show time of "Error" message
+		 */
+		durationError: 4000,
+		
+		/**
 		 * show successful message
 		 */
 		showOk: function(message, duration)
 		{
-			duration = duration || 3000;
+			duration = duration || Messenger.durationOk;
 			messageShow({
 				message: message,
 				type: Messenger.TYPE_OK,
@@ -131,7 +144,7 @@ define([
 		 */
 		showError: function(message, duration)
 		{
-			duration = duration || 3000;
+			duration = duration || Messenger.durationError;
 			messageShow({
 				message: message,
 				type: Messenger.TYPE_ERROR,
@@ -144,7 +157,7 @@ define([
 		 */
 		showMessage: function(message, duration)
 		{
-			duration = duration || 3000;
+			duration = duration || Messenger.duration;
 			messageShow({
 				message: message,
 				type: Messenger.TYPE_MESSAGE,
