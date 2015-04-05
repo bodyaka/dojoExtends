@@ -24,6 +24,9 @@ define([
 			this.cache = new Cache(this.rest, this.memory);
 	    },
 	
-		rest: null
+		rest: null,
+		memory: null,
+		cache: null
+		
 	});
 });
