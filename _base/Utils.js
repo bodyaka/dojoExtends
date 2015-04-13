@@ -5,9 +5,10 @@ define([
 	"dojo/on",
 	"dojo/dom",
 	"dojo/dom-prop",
+	"dojo/dom-class",
 	"dojo/dom-style",
     "dojo/date/locale"
-], function (lang, win, topic, on, dom, domProp, domStyle, locale) {
+], function (lang, win, topic, on, dom, domProp, domClass, domStyle, locale) {
 	
 	on(win.doc, 'keydown', function(e){
 		topic.publish('globalEventKeydown', e);
@@ -122,6 +123,71 @@ define([
 			}
 			if (t == '') t = 0;
 			return t;			
+		},
+		
+		/**
+		 * Bind Selecting (Ctrl|Shift) functionality to table
+		 * 
+		 * trsNodeList - type: query.NodeSlect object
+		 */
+		bindSelectingToTable: function(trsNodeList, callback){
+			var lastSelectedRow;
+			
+			// disable text selection
+			if(trsNodeList[0]){
+				var parent = trsNodeList[0].parentNode;
+				domStyle.set(parent, {
+					'-webkit-touch-callout': 'none',
+					'-webkit-user-select': 'none',
+					'-khtml-user-select': 'none',
+					'-moz-user-select': 'none',
+					'-ms-user-select': 'none',
+					'user-select': 'none'
+				});
+			}
+			
+			var clearAll = function(){
+				for(var i in trsNodeList){
+					domClass.remove(trsNodeList[i], 'selected');
+				}
+			};
+			
+			var toggleRow = function(row){
+				domClass.toggle(row, 'selected');
+			    lastSelectedRow = row;
+			};
+			
+			var selectRowsBetweenIndexes = function(indexes) {
+			    indexes.sort(function(a, b) {
+			        return a - b;
+			    });
+
+			    for(var i = indexes[0]; i <= indexes[1]; i++){
+			    	domClass.add(trsNodeList[i-1], 'selected');
+			    }
+			};
+			
+			var rowClickHandlers = trsNodeList.on('mousedown', function(evt){
+			    if(evt.ctrlKey){
+			        toggleRow(this);
+			    }
+
+			    if(evt.button === 0){
+			        if(!evt.ctrlKey && !evt.shiftKey){
+			            clearAll();
+			            toggleRow(this);
+			        }
+
+			        if(evt.shiftKey){
+			            selectRowsBetweenIndexes([lastSelectedRow.rowIndex, this.rowIndex])
+			        }
+			    }
+			    
+			    // run callback, if exist
+			    if(callback) callback();
+			});
+			
+			return rowClickHandlers;
 		},
 		
 		/**
