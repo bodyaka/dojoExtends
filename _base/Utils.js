@@ -109,6 +109,22 @@ define([
 		},
 		
 		/**
+		 * Parse integer value from end of string
+		 */
+		parseIntRight: function(s){
+			s = s || '';
+			var t = '';
+			var l = s.length;
+			while ((isFinite(parseInt(s.substr(l - 1, 1))) || s.substr(l - 1, 1) == '-') && t.substr(0, 1) != '-') {
+				t = s.substr(l - 1, 1) + t;
+				s = s.substr(0, l - 1);
+				l--;
+			}
+			if (t == '') t = 0;
+			return t;			
+		},
+		
+		/**
 		 * DateTime object to date (yyyy.MM.dd)
 		 */
 		convertDatetimeToStrDate: function(datetime)
