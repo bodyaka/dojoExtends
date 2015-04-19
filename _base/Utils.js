@@ -211,7 +211,7 @@ define([
 		 */
 		convertDatetimeToStrDatetime: function(datetime)
 		{
-			return locale.format(datetime, {datePattern: "yyyy.MM.dd", timePattern: "HH:mm"});
+			return locale.format(datetime, {datePattern: "yyyy.MM.dd", timePattern: "HH:mm:ss"});
 		}
 	};
 

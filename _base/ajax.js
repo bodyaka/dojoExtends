@@ -38,14 +38,15 @@ define([
 				options.headers = {'Authorization': 'Bearer ' + AccessToken}	
 			}
 			
-			return this._request(restMethod, _api + _url, params, options);
+			return this.request(restMethod, _api + _url, params, options);
 		},
 		
 		/**
 		 * send Ajax request
 		 */
-		_request: function(restMethod, url, params, options){
+		request: function(restMethod, url, params, options){
 			params = params || '';
+			options = options || {};
 			
 			// add slash at the begining of url string for request to root of domain
 			if(url.substring(0,1) != '/') url = '/' + url;

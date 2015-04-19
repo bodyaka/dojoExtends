@@ -1,6 +1,7 @@
 define([
     "dojo/_base/declare",
 	"dojo/ready",
+	"dojo/topic",
 	"dojo/string",
 	"dojo/dom-construct",
 	"dijit/_WidgetBase",
@@ -10,7 +11,7 @@ define([
 	
 	"dojoExtends/_base/_WidgetInPopup",
 	"dojoExtends/_base/Utils"
-], function(declare, ready, string, domConstruct, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template, _WidgetInPopup, Utils){
+], function(declare, ready, topic, string, domConstruct, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template, _WidgetInPopup, Utils){
 	
 	var _popupWidget = declare([WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, _WidgetInPopup], {
 		templateString: template,
@@ -74,9 +75,9 @@ define([
 	};
 	
 	/**
-	 * Show message
+	 * Handle message: show in popup, add to log
 	 */
-	var messageShow = function(){
+	var handleMessage = function(){
 		var timeoutHandler;
 		
 		return function(options){
@@ -86,6 +87,8 @@ define([
 				type: options.type
 			};
 			messageLog(messageObject);
+			
+			topic.publish('MessengerNewMessage', messageObject);
 			
 			Messenger.popup.addMessage(messageObject);
 			
@@ -114,6 +117,11 @@ define([
 		popup: new _popupWidget(),
 		
 		/**
+		 * Duplication messages to custom container
+		 */
+		additionalContainer: null,
+		
+		/**
 		 * Show time of simple message
 		 */
 		duration: 4000,
@@ -132,7 +140,7 @@ define([
 		showOk: function(message, duration)
 		{
 			duration = duration || Messenger.durationOk;
-			messageShow({
+			handleMessage({
 				message: message,
 				type: Messenger.TYPE_OK,
 				duration: duration
@@ -145,7 +153,7 @@ define([
 		showError: function(message, duration)
 		{
 			duration = duration || Messenger.durationError;
-			messageShow({
+			handleMessage({
 				message: message,
 				type: Messenger.TYPE_ERROR,
 				duration: duration
@@ -158,7 +166,7 @@ define([
 		showMessage: function(message, duration)
 		{
 			duration = duration || Messenger.duration;
-			messageShow({
+			handleMessage({
 				message: message,
 				type: Messenger.TYPE_MESSAGE,
 				duration: duration
