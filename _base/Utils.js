@@ -2,13 +2,15 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/window",
 	"dojo/topic",
+	"dojo/query",
 	"dojo/on",
 	"dojo/dom",
+	"dojo/dom-construct",
 	"dojo/dom-prop",
 	"dojo/dom-class",
 	"dojo/dom-style",
     "dojo/date/locale"
-], function (lang, win, topic, on, dom, domProp, domClass, domStyle, locale) {
+], function (lang, win, topic, query, on, dom, domConstruct, domProp, domClass, domStyle, locale) {
 	
 	on(win.doc, 'keydown', function(e){
 		topic.publish('globalEventKeydown', e);
@@ -212,6 +214,48 @@ define([
 		convertDatetimeToStrDatetime: function(datetime)
 		{
 			return locale.format(datetime, {datePattern: "yyyy.MM.dd", timePattern: "HH:mm:ss"});
+		},
+		
+		/**
+		 * Pretty json string and return dom node
+		 * 
+		 * @json: any type
+		 */
+		jsonPretty: function(json) {
+		    if (typeof json == 'string') { // if string - prevent to object
+		         json = JSON.parse(json);
+		    }
+		    json = JSON.stringify(json, undefined, 2);
+		    
+		    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+		    json = json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+		        var cls = 'number';
+		        if (/^"/.test(match)) {
+		            if (/:$/.test(match)) {
+		                cls = 'key';
+		            } else {
+		                cls = 'string';
+		            }
+		        } else if (/true|false/.test(match)) {
+		            cls = 'boolean';
+		        } else if (/null/.test(match)) {
+		            cls = 'null';
+		        }
+		        return '<span class="' + cls + '">' + match + '</span>';
+		    });
+		    
+		    var jsonDom = domConstruct.toDom(json);
+		    
+		    // style dom
+		    query('.key', jsonDom).style({fontWeight: 'bold', fontSize: '90%'});
+		    query('.boolean', jsonDom).style({color: 'blue'});
+		    query('.number', jsonDom).style({color: 'darkorange'});
+		    query('.string', jsonDom).style({color: 'green'});
+		    query('.null', jsonDom).style({color: 'magenta'});
+		    var pre = domConstruct.create('pre')
+		    domConstruct.place(jsonDom, pre);
+		    
+		    return pre;
 		}
 	};
 
