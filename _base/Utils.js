@@ -193,6 +193,29 @@ define([
 		},
 		
 		/**
+		 * Filter select options by statuses algorithm 
+		 */
+		selectOptionsFiltersStatusesByAlgorithm: function(selectWidget, statusId, statusesMap, statusesAlgorithm) {
+			var algorithm = statusesAlgorithm[statusId] || [];
+			
+			selectWidget.set('disabled', false);
+			
+			var options = [];
+			// sort options by source list
+			for(var i in statusesMap){
+				if(i == statusId || algorithm.indexOf(String(i)) >= 0){
+					options.push({
+						value: String(i),
+						label: statusesMap[i]
+					});
+				}
+			}
+			
+			selectWidget.set('options', options);
+			selectWidget.set('value', String(statusId));
+		},
+		
+		/**
 		 * DateTime object to date (yyyy.MM.dd)
 		 */
 		convertDatetimeToStrDate: function(datetime)
