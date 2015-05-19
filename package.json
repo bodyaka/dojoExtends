@@ -1,0 +1,20 @@
+{
+	"name": "dojoExtends",
+	"version":"1.0.1",
+	"directories": {
+	},
+	"dependencies": {
+		"dojo":"1.10.4"
+	},
+	"description": "dojoExtends",
+	"licenses": [
+		 {
+				 "type": "GNU General Public Licens",
+				 "url": ""
+		 }
+	],
+	"bugs": "http://bugs.dojotoolkit.org/",
+	"keywords": ["JavaScript", "Dojo", "dojoExtends"],
+	"homepage": "http://dojotoolkit.org/",
+	"dojoBuild": "dojoExtends.profile.js"
+}
