@@ -2,6 +2,8 @@ var profile = (function(){
 	var copyOnly = function(filename, mid){
 		var cantCopy = false;
 		var list = [
+			"dojoExtends/dojoExtends.profile",
+			"dojoExtends/package.json",
 			"dojoExtends/_base/dev"
 		];
 		
